@@ -1,4 +1,5 @@
 stages:
+
   split:
     cmd: python src/data/1_Split.py
     deps:
@@ -9,6 +10,7 @@ stages:
     - data/processed/X_train.csv
     - data/processed/y_test.csv
     - data/processed/y_train.csv
+
   normalize:
     cmd: python src/data/2_Normalize.py
     deps:
@@ -18,6 +20,7 @@ stages:
     outs:
     - data/processed/X_test_scaled.csv
     - data/processed/X_train_scaled.csv
+
   gridsearch:
     cmd: python src/models/3_GridSearch.py
     deps:
@@ -25,24 +28,26 @@ stages:
     - data/processed/y_train.csv
     - src/models/3_GridSearch.py
     outs:
-    - models/data/best_model.pkl
-    - models/data/best_params.pkl
+    - models/models/best_model.pkl
+    - models/models/best_params.pkl
+
   train:
     cmd: python src/models/4_Train.py
     deps:
     - data/processed/X_train_scaled.csv
     - data/processed/y_train.csv
-    - models/data/best_model.pkl
-    - models/data/best_params.pkl
+    - models/models/best_model.pkl
+    - models/models/best_params.pkl
     - src/models/4_Train.py
     outs:
-    - models/data/final_model.pkl
+    - models/models/final_model.pkl
+
   evaluate:
     cmd: python src/models/5_Evaluate.py
     deps:
     - data/processed/X_test_scaled.csv
     - data/processed/y_test.csv
-    - models/data/final_model.pkl
+    - models/models/final_model.pkl
     - src/models/5_Evaluate.py
     outs:
     - metrics/scores.json
